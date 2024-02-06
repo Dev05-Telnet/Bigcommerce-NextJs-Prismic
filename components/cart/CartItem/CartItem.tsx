@@ -1,9 +1,8 @@
-import { ChangeEvent, FocusEventHandler, useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import cn from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
 import s from './CartItem.module.css'
-import { Trash, Plus, Minus, Cross } from '@components/icons'
 import { useUI } from '@components/ui/context'
 import type { LineItem } from '@commerce/types/cart'
 import usePrice from '@framework/product/use-price'
@@ -37,6 +36,12 @@ const CartItem = ({
   const { price } = usePrice({
     amount: item.variant.price * item.quantity,
     baseAmount: item.variant.listPrice * item.quantity,
+    currencyCode,
+  })
+
+  const { price: itemPrice } = usePrice({
+    amount: item.variant.price,
+    baseAmount: item.variant.listPrice,
     currencyCode,
   })
 
@@ -76,14 +81,13 @@ const CartItem = ({
   }, [item.quantity])
 
   return (
-    <li
-      className={cn(s.root, {
+    <tr key={'cart' + item.id}
+      className={cn({
         'opacity-50 pointer-events-none': removing,
       })}
-      {...rest}
     >
-      <div className="flex flex-row space-x-4 py-4">
-        <div className="w-16 h-16 bg-violet relative overflow-hidden cursor-pointer z-0">
+      <td className="product-thumbnail">
+        <figure>
           <Link href={`/product/${item.path}`}>
             <a>
               <Image
@@ -97,8 +101,10 @@ const CartItem = ({
               />
             </a>
           </Link>
-        </div>
-        <div className="flex-1 flex flex-col text-base">
+        </figure>
+      </td>
+      <td className="product-name">
+        <div className="product-name-section">
           <Link href={`/product/${item.path}`}>
             <a>
               <span
@@ -138,20 +144,30 @@ const CartItem = ({
             <div className="text-sm tracking-wider">{quantity}x</div>
           )}
         </div>
-        <div className="flex flex-col justify-between space-y-2 text-sm">
-          <span>{price}</span>
-        </div>
-      </div>
-      {variant === 'default' && (
-        <Quantity
-          value={quantity}
-          handleRemove={handleRemove}
-          handleChange={handleChange}
-          increase={() => increaseQuantity(1)}
-          decrease={() => increaseQuantity(-1)}
-        />
-      )}
-    </li>
+      </td>
+      <td className="product-subtotal">
+        <span className="amount">{itemPrice}</span>
+      </td>
+      <td className="product-quantity">
+        {variant === 'default' && (
+          <Quantity
+            value={quantity}
+            handleRemove={handleRemove}
+            handleChange={handleChange}
+            increase={() => increaseQuantity(1)}
+            decrease={() => increaseQuantity(-1)}
+          />
+        )}
+      </td>
+      <td className="product-price">
+        <span className="amount">{price}</span>
+      </td>
+      <td className="product-close">
+        <button className="product-remove" title="Remove this product" onClick={handleRemove}>
+          <i className="fas fa-times"></i>
+        </button>
+      </td>
+    </tr>
   )
 }
 

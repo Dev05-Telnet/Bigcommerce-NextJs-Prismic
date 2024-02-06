@@ -11,6 +11,7 @@ interface SwatchProps {
   variant?: 'size' | 'color' | string
   color?: string
   label?: string | null
+  imageUrl?: string
 }
 
 const Swatch: React.FC<Omit<ButtonProps, 'variant'> & SwatchProps> = React.memo(
@@ -18,6 +19,7 @@ const Swatch: React.FC<Omit<ButtonProps, 'variant'> & SwatchProps> = React.memo(
     active,
     className,
     color = '',
+    imageUrl = '',
     label = null,
     variant = 'size',
     ...props
@@ -44,7 +46,7 @@ const Swatch: React.FC<Omit<ButtonProps, 'variant'> & SwatchProps> = React.memo(
       <Button
         aria-label="Variant Swatch"
         className={swatchClassName}
-        {...(label && color && { title: label })}
+        {...(label && (color||imageUrl) && { title: label })}
         style={color ? { backgroundColor: color } : {}}
         {...props}
       >
@@ -53,7 +55,8 @@ const Swatch: React.FC<Omit<ButtonProps, 'variant'> & SwatchProps> = React.memo(
             <Check />
           </span>
         )}
-        {!color ? label : null}
+        {imageUrl && <img style={{width:'28px'}} src={imageUrl}/> }
+        {!color && !imageUrl ? label : null}
       </Button>
     )
   }

@@ -5,8 +5,10 @@ import type {
 } from 'next'
 import { useRouter } from 'next/router'
 import commerce from '@lib/api/commerce'
+import Helmet from 'react-helmet';
+
 import { Layout } from '@components/common'
-import { ProductView } from '@components/product'
+import ProductOne from '@components/partials/product/product-one'
 
 export async function getStaticProps({
   params,
@@ -44,7 +46,7 @@ export async function getStaticProps({
       relatedProducts,
       categories,
     },
-    revalidate: 200,
+    revalidate: 200,   
   }
 }
 
@@ -54,12 +56,12 @@ export async function getStaticPaths({ locales }: GetStaticPathsContext) {
   return {
     paths: locales
       ? locales.reduce<string[]>((arr, locale) => {
-          // Add a product path for every locale
-          products.forEach((product: any) => {
-            arr.push(`/${locale}/product${product.path}`)
-          })
-          return arr
-        }, [])
+        // Add a product path for every locale
+        products.forEach((product: any) => {
+          arr.push(`/${locale}/product${product.path}`)
+        })
+        return arr
+      }, [])
       : products.map((product: any) => `/product${product.path}`),
     fallback: 'blocking',
   }
@@ -74,7 +76,26 @@ export default function Slug({
   return router.isFallback ? (
     <h1>Loading...</h1>
   ) : (
-    <ProductView product={product} relatedProducts={relatedProducts} />
+
+    <main className="main mt-6 single-product">
+      <Helmet>
+        <title>NeoPraxis NextJs eCommerce Template | Product Masonry</title>
+      </Helmet>
+
+      <h1 className="d-none">Riode React eCommerce Template - Product Masonry</h1>
+
+      <div className={`page-content mb-10 pb-6`}>
+        {/* <ProductView product={product} relatedProducts={relatedProducts}/> */}
+        <div className="container skeleton-body">
+          
+        <ProductOne product={product} />
+
+          {/* <DescOne product={product} isGuide={false} isShipping={true} /> */}
+
+          {/*<RelatedProducts products={related} /> */}
+        </div>
+      </div>
+    </main>
   )
 }
 

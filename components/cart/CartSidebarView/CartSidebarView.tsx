@@ -116,9 +116,15 @@ const CartSidebarView: FC = () => {
                   Proceed to Checkout ({total})
                 </Button>
               ) : (
-                <Button href="/checkout" Component="a" width="100%">
-                  Proceed to Checkout
-                </Button>
+                <div className="flex justify-between py-1">
+                  <Button Component="a" width="48%" href="/cart">
+                    View My Cart
+                  </Button>
+
+                  <Button href="/checkout" Component="a" width="48%">
+                    Proceed to Checkout
+                  </Button>
+                </div>
               )}
             </div>
           </div>
