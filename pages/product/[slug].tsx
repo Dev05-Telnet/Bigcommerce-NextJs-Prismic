@@ -78,4 +78,4 @@ export default function Slug({
   )
 }
 
-Slug.Layout = Layout
+Slug.Layout = Layout 
